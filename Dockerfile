@@ -2,7 +2,7 @@
 FROM alpine:latest
 
 # 定义压缩包下载链接
-ENV OPENLIST_URL="https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-android-amd64.tar.gz"
+ENV OPENLIST_URL="https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-linux-amd64.tar.gz"
 
 # 创建工作目录并切换
 WORKDIR /app
