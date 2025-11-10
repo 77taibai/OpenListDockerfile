@@ -18,10 +18,7 @@ RUN apt-get update && \
     ./openlist admin && \
     ./openlist stop && \
     # 清理冗余文件和工具
-    rm -rf openlist.tar.gz && \
-    apt-get purge -y --auto-remove wget tar ca-certificates && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf openlist.tar.gz
 
 EXPOSE 5244
 
