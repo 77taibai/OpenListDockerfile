@@ -1,26 +1,28 @@
-# 基础镜像
 FROM ubuntu:22.04
 
-# 定义压缩包下载链接
+# 设置非交互模式并定义环境变量
 ENV DEBIAN_FRONTEND=noninteractive \
     D_OPENLIST_URL="https://github.com/OpenListTeam/OpenList/releases/latest/download/openlist-linux-amd64.tar.gz"
 
-# 创建工作目录并切换
 WORKDIR /app
 
-# 下载→解压→授权→初始化（启动后立即停止，避免构建阻塞）→清理
+# 安装必要工具（包含 CA 证书）并执行操作
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget tar && \
-    wget -O openlist.tar.gz $D_OPENLIST_URL && \
+    # 关键：安装 ca-certificates 解决 SSL 证书验证问题
+    apt-get install -y --no-install-recommends wget tar ca-certificates && \
+    wget -O openlist.tar.gz "$D_OPENLIST_URL" && \
     tar -zxvf openlist.tar.gz && \
     chmod +x ./openlist && \
     ./openlist start && \
-    sleep 2 && \
+    sleep 5 && \
     ./openlist admin && \
     ./openlist stop && \
-    rm -rf openlist.tar.gz
+    # 清理冗余文件和工具
+    rm -rf openlist.tar.gz && \
+    apt-get purge -y --auto-remove wget tar ca-certificates && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 EXPOSE 5244
 
-# 容器启动时正式运行服务
 CMD ["./openlist", "server"]
