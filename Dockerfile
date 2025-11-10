@@ -10,12 +10,14 @@ WORKDIR /app
 # 下载→解压→授权→初始化（启动后立即停止，避免构建阻塞）→清理
 RUN wget -O openlist.tar.gz $OPENLIST_URL && \
     tar -zxvf openlist.tar.gz && \
-    chmod +x openlist && \
+    chmod +x ./openlist && \
     ./openlist start && \
     sleep 2 && \
     ./openlist admin && \
     ./openlist stop && \
     rm -rf openlist.tar.gz
+
+EXPOSE 5244
 
 # 容器启动时正式运行服务
 CMD ["./openlist", "server"]
